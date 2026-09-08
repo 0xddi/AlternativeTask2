@@ -14,18 +14,27 @@ public class Solver {
     }
     private static void PrintCombinationsWithTarget(ArrayList<ExpressionTemplate> expressionTemplateList, int target) {
         int count = 0;
-        final double EPSILON = 1e-9; // Допустимая погрешность для double
+        int skipped = 0;
+        final double EPSILON = 1e-9;
 
         for (var template : expressionTemplateList) {
-            double result = template.calculateExpression();
-            // Проверяем, что результат близок к целому числу и равен target
-            if (Math.abs(result - target) < EPSILON) {
-                System.out.println(template + "=" + target);
-                count++;
+            try {
+                double result = template.calculateExpression();
+                if (Math.abs(result - target) < EPSILON) {
+                    System.out.println(template + "=" + target);
+                    count++;
+                }
+            } catch (ArithmeticException e) {
+                skipped++;
+                // Для отладки (раскомментировать при необходимости):
+                // System.out.println("Пропущено (деление на ноль): " + template);
             }
         }
 
         System.out.println("Всего найдено комбинаций: " + count);
+        if (skipped > 0) {
+            System.out.println("Пропущено выражений (деление на ноль): " + skipped);
+        }
     }
     private static ArrayList<ExpressionTemplate> ExpressionTemplateFactory(ArrayList<ArrayList<CharSequence>> numberCombinationsList) {
         var combinationTemplateList = new ArrayList<ExpressionTemplate>();

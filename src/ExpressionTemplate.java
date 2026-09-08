@@ -28,7 +28,7 @@ public class ExpressionTemplate {
                     if (nextNum != 0) {
                         numbers.add(last / nextNum);
                     } else {
-                        return Double.MAX_VALUE;
+                        throw new ArithmeticException("Division by zero");
                     }
                 }
             } else {
